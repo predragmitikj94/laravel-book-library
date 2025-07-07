@@ -9,12 +9,17 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   </head>
-  <body>
+  <body class="container mt-5">
        <h1>Books List</h1>
+
+    @if(session('success'))
+        <p style="color: green">{{ session('success') }}</p>
+    @endif
 
     <a href="{{ route('books.create') }}">Add New Book</a><br><br>
 
-    <table border="1" cellpadding="10">
+    <table class="table table-striped">
+
         <thead>
             <tr>
                 <th>Title</th>
