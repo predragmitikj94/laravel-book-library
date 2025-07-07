@@ -14,8 +14,8 @@ class BookController extends Controller
      */
     public function index()
     {
-         $books = Book::with(['author', 'category'])->get();
-         return view('books.index', compact('books'));
+        $books = Book::with(['author', 'category'])->get();
+        return view('books.index', compact('books'));
     }
 
     /**
@@ -33,7 +33,21 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate(
+            [
+                'title' => 'required|string',
+                'author_id' => 'required|exists:authors,id',
+                'category_id' => 'required|exists:categories,id',
+                'year' => 'required|digits:4|integer',
+                'pages' => 'required|integer',
+                'image_url' => 'required|url'
+            ]
+
+           
+        );
+
+         Book::create($validated);
+         return redirect()->route('books.index')->with('success', 'Book added successfully!');
     }
 
     /**
