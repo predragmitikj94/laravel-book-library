@@ -43,11 +43,11 @@ class BookController extends Controller
                 'image_url' => 'required|url'
             ]
 
-           
+
         );
 
-         Book::create($validated);
-         return redirect()->route('books.index')->with('success', 'Book added successfully!');
+        Book::create($validated);
+        return redirect()->route('books.index')->with('success', 'Book added successfully!');
     }
 
     /**
@@ -61,24 +61,38 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Book $book)
     {
-        //
+        $authors = Author::all();
+        $categories = Category::all();
+        return view('books.edit', compact('book', 'authors', 'categories'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Book $book)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string',
+            'author_id' => 'required|exists:authors,id',
+            'category_id' => 'required|exists:categories,id',
+            'year' => 'required|digits:4|integer',
+            'pages' => 'required|integer',
+            'image_url' => 'required|url',
+        ]);
+
+        $book->update($validated);
+
+        return redirect()->route('books.index')->with('success', 'Book updated successfully!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Book $book)
     {
-        //
+        $book->delete();
+        return redirect()->route('books.index')->with('success', 'Book deleted successfully!');
     }
 }
