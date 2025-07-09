@@ -31,6 +31,7 @@
                 <th>Year</th>
                 <th>Pages</th>
                 <th>Edit</th>
+                <th>Show</th>
                 <th>Delete</th>
             </tr>
         </thead>
@@ -44,6 +45,9 @@
                     <td>{{ $book->pages }}</td>
                     <td>
                         <a href="{{ route('books.edit', $book->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                    </td>
+                    <td>
+                        <a href="{{ route('books.show', $book->id) }}" class="btn btn-sm btn-info">Show</a>
                     </td>
                     <td>
                         <form method="POST" action="{{ route('books.destroy', $book->id) }}"

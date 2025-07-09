@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
@@ -10,6 +11,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('books', BookController::class);
+    Route::post('/books/{book}/comments', [CommentController::class, 'store'])->name('comments.store');
 });
 
 
@@ -23,4 +25,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
