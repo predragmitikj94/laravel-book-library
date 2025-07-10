@@ -14,7 +14,8 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        $pendingComments = Comment::where('is_approved', false)->latest()->get();
+        return view('admin.comments.index', compact('pendingComments'));
     }
 
     /**
@@ -75,16 +76,21 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function approve(Comment $comment)
     {
-        //
+        $comment->is_approved = true;
+        $comment->save();
+
+        return redirect()->route('admin.comments.index')->with('success', 'Comment approved successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Comment $comment)
     {
-        //
+        $comment->delete();
+
+        return redirect()->route('admin.comments.index')->with('success', 'Comment deleted successfully.');
     }
 }

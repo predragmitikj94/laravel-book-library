@@ -13,6 +13,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('books', BookController::class);
     Route::post('/books/{book}/comments', [CommentController::class, 'store'])->name('comments.store');
 });
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/comments', [CommentController::class, 'index'])->name('admin.comments.index');
+    Route::patch('/admin/comments/{comment}/approve', [CommentController::class, 'approve'])->name('admin.comments.approve');
+    Route::delete('/admin/comments/{comment}', [CommentController::class, 'destroy'])->name('admin.comments.destroy');
+});
+
 
 
 Route::get('/dashboard', function () {
