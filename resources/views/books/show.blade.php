@@ -12,7 +12,7 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
-<body class="container mt-5">  
+<body class="container mt-5">
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
@@ -40,6 +40,25 @@
     @else
         <p>Please <a href="{{ route('login') }}">log in</a> to leave a comment.</p>
     @endauth
+
+    <div class="container mt-4">
+        <h3>Approved Comments:</h3>
+
+        @if ($comments->count())
+            @foreach ($comments as $comment)
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <p>{{ $comment->content }}</p>
+                        <small class="text-muted">By: {{ $comment->user->name }} on
+                            {{ $comment->created_at->format('M d, Y') }}</small>
+                    </div>
+                </div>
+            @endforeach
+        @else
+            <p>No comments yet for this book.</p>
+        @endif
+    </div>
+
 
 
     <!-- Optional JavaScript -->

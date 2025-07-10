@@ -55,7 +55,10 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        return view('books.show', compact('book'));
+        // Fetch only approved comments related to this book
+        $comments = $book->comments()->where('is_approved', true)->latest()->get();
+
+        return view('books.show', compact('book', 'comments'));
     }
 
 
