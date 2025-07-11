@@ -13,56 +13,72 @@
 </head>
 
 <body class="container mt-5">
-    <h1>Books List</h1>
+    <x-app-layout>
+        <x-slot name="header">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Books List') }}
+            </h2>
+        </x-slot>
 
-    @if (session('success'))
-        <p style="color: green">{{ session('success') }}</p>
-    @endif
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                    @if (session('success'))
+                        <div class="bg-green-100 text-green-800 p-2 rounded mb-4">
+                            {{ session('success') }}
+                        </div>
+                    @endif
 
-    <a class="btn btn-sm btn-success" href="{{ route('books.create') }}">Add New Book</a><br><br>
+                    <a href="{{ route('books.create') }}" class="btn btn-primary mb-4">Add New Book</a>
 
-    <table class="table table-striped">
+                    <table class="table table-striped">
 
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Category</th>
-                <th>Year</th>
-                <th>Pages</th>
-                <th>Edit</th>
-                <th>Show</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($books as $book)
-                <tr>
-                    <td>{{ $book->title }}</td>
-                    <td>{{ $book->author->first_name }} {{ $book->author->last_name }}</td>
-                    <td>{{ $book->category->title }}</td>
-                    <td>{{ $book->year }}</td>
-                    <td>{{ $book->pages }}</td>
-                    <td>
-                        <a href="{{ route('books.edit', $book->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                    </td>
-                    <td>
-                        <a href="{{ route('books.show', $book->id) }}" class="btn btn-sm btn-info">Show</a>
-                    </td>
-                    <td>
-                        <form method="POST" action="{{ route('books.destroy', $book->id) }}"
-                            class="d-inline delete-form">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                        </form>
-                    </td>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Category</th>
+                                <th>Year</th>
+                                <th>Pages</th>
+                                <th>Edit</th>
+                                <th>Show</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($books as $book)
+                                <tr>
+                                    <td>{{ $book->title }}</td>
+                                    <td>{{ $book->author->first_name }} {{ $book->author->last_name }}</td>
+                                    <td>{{ $book->category->title }}</td>
+                                    <td>{{ $book->year }}</td>
+                                    <td>{{ $book->pages }}</td>
+                                    <td>
+                                        <a href="{{ route('books.edit', $book->id) }}"
+                                            class="btn btn-sm btn-primary">Edit</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('books.show', $book->id) }}"
+                                            class="btn btn-sm btn-info">Show</a>
+                                    </td>
+                                    <td>
+                                        <form method="POST" action="{{ route('books.destroy', $book->id) }}"
+                                            class="d-inline delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    </td>
 
 
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </x-app-layout>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -84,7 +100,7 @@
 
             deleteForms.forEach(form => {
                 form.addEventListener('submit', function(e) {
-                    e.preventDefault(); 
+                    e.preventDefault();
 
                     swal({
                             title: "Are you sure?",
@@ -95,7 +111,7 @@
                         })
                         .then((willDelete) => {
                             if (willDelete) {
-                                form.submit(); 
+                                form.submit();
                             }
                         });
                 });
