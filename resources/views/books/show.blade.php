@@ -59,6 +59,54 @@
         @endif
     </div>
 
+    <h3>Your Private Notes</h3>
+
+    @forelse($book->notes()->where('user_id', auth()->id())->latest()->get() as $note)
+        <div class="card mb-2">
+            <div class="card-body">
+                <p>{{ $note->content }}</p>
+                <small class="text-muted">Created: {{ $note->created_at->format('M d, Y') }}</small>
+                <div class="mt-2">
+                    <a href="{{ route('notes.edit', $note->id) }}" class="btn btn-sm btn-primary">Edit</a>
+
+                    <form action="{{ route('notes.destroy', $note->id) }}" method="POST" class="d-inline delete-form">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @empty
+        <p>You have no notes for this book yet.</p>
+    @endforelse
+
+    <h4>Add a New Note</h4>
+
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+    <form action="{{ route('notes.store', $book->id) }}" method="POST">
+        @csrf
+
+        <div class="form-group">
+            <label for="content">Your Note:</label>
+            <textarea name="content" id="content" rows="3" class="form-control" required>{{ old('content') }}</textarea>
+            @error('content')
+                <small class="text-danger">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <button type="submit" class="btn btn-success mt-2">Add Note</button>
+    </form>
+
+
+
 
 
     <!-- Optional JavaScript -->
