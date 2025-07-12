@@ -69,6 +69,30 @@ npm run dev
 
 ✅ Laravel Breeze authentication✅ Tailwind CSS styling with Blade components✅ Books CRUD secured by authentication✅ Public comments with admin approval workflow✅ Private notes tied to user and book✅ Admin panel for comment moderation✅ Clean MVC structure for learning and extension
 
+### 🧪 Testing
+
+This project includes full feature test coverage using Laravel's built-in testing system.
+
+✅ Tests include:
+
+- Book viewing and creation (auth required)  
+- Guest restrictions (cannot post without login)  
+- Private note functionality (create, edit, delete, visibility)  
+- Public comment submission (one per book, pending approval)  
+- Admin comment moderation (view, approve, delete)  
+
+Run all tests:
+
+```
+php artisan test
+```
+
+Or run a specific test:
+
+```
+php artisan test --filter=CommentTest
+```
+
 🤝 Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss proposed changes.
