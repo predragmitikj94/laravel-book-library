@@ -4,37 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Comment;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreCommentRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+
 
 class CommentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
         $pendingComments = Comment::where('is_approved', false)->latest()->get();
         return view('admin.comments.index', compact('pendingComments'));
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Book $book)
+    public function store(StoreCommentRequest $request, Book $book): RedirectResponse
     {
 
-        $validated = $request->validate([
-            'content' => 'required|string|min:3|max:1000',
-        ]);
+        $validated = $request->validated();
 
 
         $existingComment = Comment::where('user_id', Auth::id())
@@ -58,25 +51,9 @@ class CommentController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function approve(Comment $comment)
+    public function approve(Comment $comment): RedirectResponse
     {
         $comment->is_approved = true;
         $comment->save();
@@ -87,7 +64,7 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment): RedirectResponse
     {
         $comment->delete();
 

@@ -4,35 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Note;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreNoteRequest;
+use App\Http\Requests\UpdateNoteRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class NoteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
+   
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Book $book)
+    public function store(StoreNoteRequest $request, Book $book): RedirectResponse
     {
-        $validated = $request->validate([
-            'content' => 'required|string|min:3|max:1000',
-        ]);
+        $validated = $request->validated();
 
         Note::create([
             'user_id' => Auth::id(),
@@ -43,18 +29,11 @@ class NoteController extends Controller
         return redirect()->route('books.show', $book->id)->with('success', 'Note added successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Note $note)
+    public function edit(Note $note): View
     {
         // Ensure only the note's owner can edit
         if ($note->user_id !== Auth::id()) {
@@ -67,15 +46,13 @@ class NoteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Note $note)
+    public function update(UpdateNoteRequest $request, Note $note): RedirectResponse
     {
         if ($note->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
 
-        $validated = $request->validate([
-            'content' => 'required|string|min:3|max:1000',
-        ]);
+        $validated = $request->validated();
 
         $note->update([
             'content' => $validated['content'],
@@ -87,7 +64,7 @@ class NoteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Note $note)
+    public function destroy(Note $note): RedirectResponse
     {
         if ($note->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');

@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Author;
 use App\Models\Category;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreBookRequest;
+use App\Http\Requests\UpdateBookRequest;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
         $books = Book::with(['author', 'category'])->get();
         return view('books.index', compact('books'));
@@ -21,7 +24,7 @@ class BookController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
         $categories = Category::all();
         $authors = Author::all();
@@ -31,20 +34,9 @@ class BookController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreBookRequest $request): RedirectResponse
     {
-        $validated = $request->validate(
-            [
-                'title' => 'required|string',
-                'author_id' => 'required|exists:authors,id',
-                'category_id' => 'required|exists:categories,id',
-                'year' => 'required|digits:4|integer',
-                'pages' => 'required|integer',
-                'image_url' => 'required|url'
-            ]
-
-
-        );
+        $validated = $request->validated();
 
         Book::create($validated);
         return redirect()->route('books.index')->with('success', 'Book added successfully!');
@@ -53,7 +45,7 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Book $book)
+    public function show(Book $book): View
     {
         // Fetch only approved comments related to this book
         $comments = $book->comments()->where('is_approved', true)->latest()->get();
@@ -65,7 +57,7 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Book $book)
+    public function edit(Book $book): View
     {
         $authors = Author::all();
         $categories = Category::all();
@@ -75,16 +67,9 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Book $book)
+    public function update(UpdateBookRequest $request, Book $book): RedirectResponse
     {
-        $validated = $request->validate([
-            'title' => 'required|string',
-            'author_id' => 'required|exists:authors,id',
-            'category_id' => 'required|exists:categories,id',
-            'year' => 'required|digits:4|integer',
-            'pages' => 'required|integer',
-            'image_url' => 'required|url',
-        ]);
+        $validated = $request->validated();
 
         $book->update($validated);
 
@@ -94,7 +79,7 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Book $book)
+    public function destroy(Book $book): RedirectResponse
     {
         $book->delete();
         return redirect()->route('books.index')->with('success', 'Book deleted successfully!');
